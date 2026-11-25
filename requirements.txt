@@ -1,0 +1,11 @@
+polars>=1.0
+pyarrow
+pandas
+beautifulsoup4
+requests
+yfinance
+scikit-learn
+plotly
+matplotlib
+threadpoolctl
+jupyter
