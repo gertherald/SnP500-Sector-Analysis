@@ -38,11 +38,14 @@ The first run downloads data (about a minute) and caches it in `data/raw/` as Pa
 | `data/processed/returns_long.parquet` | one row per stock-day with daily return |
 | `data/processed/returns_matrix.parquet` | stocks x days matrix of daily returns |
 | `data/processed/sectors.parquet` | sectors of the stocks kept after cleaning |
+| `data/processed/clusters.parquet` | ticker, sector, KMeans cluster and PCA scores per stock |
 
 ## Layout
 ```
 src/config.py      fixed dates, thresholds, seed, paths
 src/data.py        data pipeline (Polars)
+src/baseline.py    correlation baseline: heatmap, within vs cross-sector correlation
+src/clustering.py  standardising, PCA with shuffle noise check, KMeans, silhouette scores
 notebooks/         analysis notebooks, run in order
 docs/              proposal, process book
 data/              cached and processed data (not in git)

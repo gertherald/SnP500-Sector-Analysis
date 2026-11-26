@@ -23,6 +23,13 @@ EXTREME_RETURN = 0.50
 # --- Reproducibility --------------------------------------------------------
 RANDOM_SEED = 42
 
+# --- Clustering -------------------------------------------------------------
+MAX_COMPONENTS = 60  # PCA components computed before deciding how many to keep
+N_SHUFFLES = 20  # shuffled copies of the data used as the noise benchmark
+NOISE_PERCENTILE = 95  # a real component must beat this percentile of the shuffled ones
+N_CLUSTERS = 11  # same number as GICS sectors, so clusters and sectors compare like for like
+KMEANS_N_INIT = 10  # KMeans restarts from different starting centres, best one kept
+
 # --- Data sources -----------------------------------------------------------
 WIKI_URL = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
 # Wikipedia blocks the default Python User-Agent, so identify the client politely.
@@ -41,3 +48,4 @@ RAW_PRICES_PATH = RAW_DIR / "prices.parquet"
 RETURNS_LONG_PATH = PROCESSED_DIR / "returns_long.parquet"
 RETURNS_MATRIX_PATH = PROCESSED_DIR / "returns_matrix.parquet"
 SECTORS_PATH = PROCESSED_DIR / "sectors.parquet"
+CLUSTERS_PATH = PROCESSED_DIR / "clusters.parquet"

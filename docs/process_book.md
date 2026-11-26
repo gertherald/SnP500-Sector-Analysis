@@ -124,4 +124,58 @@ Short entries after every work session: what I worked on, problems, what I learn
 **Next:**
 - Standardise returns and run PCA; check whether the first component is the market
 
+### 2026-11-26
+
+**Focus:** Clustering
+
+**Worked on:**
+
+*PCA*
+- Standardised every stock to mean 0 and standard deviation 1 over its own days
+- Ran PCA on the standardised returns and checked whether the first component is the market
+- Used a shuffle test to decide how many components carry shared patterns
+- Read the first two components by averaging the scores per sector
+
+*Clustering*
+- Ran KMeans for 2 to 20 clusters on the PCA scores and compared the silhouette scores
+- Scored the official sectors with the same silhouette measure, overall and per sector
+
+**Problems:**
+
+*Standardising*
+- On raw returns, a stock that copies another stock's moves at three times the size looked further away than an unrelated quiet stock. Distance mixed volatility with co-movement. Standardising each stock fixed it: distance then depends only on correlation.
+- scikit-learn's standard scaler works on columns, which here are days, not stocks. Standardising the rows by hand was simpler to explain.
+
+*PCA*
+- I expected the first component to be the market, but it was only weakly related to it and split the stocks into two halves. scikit-learn centres every day before PCA, and subtracting each day's average return is the same as removing the market move. Without centring, the first component follows the market almost perfectly.
+- A manual check of the PCA scores only matched scikit-learn for the first component. With more than 500 columns, scikit-learn quietly switches to a faster approximate method. Asking for the exact method made all components match and changed the number of components kept.
+
+*Choosing the number of clusters*
+- The silhouette score had no clear peak: it rose slowly and then flattened, and a different random seed moved it about as much as one extra cluster. I chose 11 clusters, the same number as sectors, so clusters and sectors can be compared like for like.
+
+
+**Learned:**
+
+*PCA*
+- PCA finds the directions in which stocks differ the most. Keeping the most variance is the same as losing the least information.
+- The stock-by-stock and day-by-day matrices give the same components; one side gives each stock's score, the other gives the pattern over time.
+- With standardised stocks, PCA is essentially a decomposition of the correlation heatmap from the baseline.
+- After removing the market, the biggest pattern is growth vs defensive: technology on one side, consumer staples, utilities and real estate on the other.
+
+*Permutation vs bootstrap*
+- Shuffling each stock's days destroys any shared pattern but keeps each stock's own returns. PCA on shuffled data shows how big components get by chance, which gives a threshold for real components. About half of the variance is shared; the rest is company-specific news, which cannot help grouping.
+- A permutation breaks a relationship to test "real or luck?". A bootstrap keeps relationships and resamples whole days to test "how much does the result wobble?". Both resample, but answer different questions.
+
+*Findings*
+- Clusters found from the data separate stocks much better than the official sectors.
+- Per sector, Energy and Utilities are clear groups, while Industrials and Materials are closer to other sectors than to themselves. This matches the correlation baseline, found with a different method.
+
+**Resources:**
+- scikit-learn documentation: `PCA` (including `svd_solver`), `KMeans`, `silhouette_score`, `silhouette_samples`
+- numpy documentation: `linalg.svd`, `linalg.eigh`
+- Horn's parallel analysis for choosing the number of components
+
+**Next:**
+- Cross-tabulate clusters against sectors and list stocks that sit outside their sector's cluster
+
 ---
